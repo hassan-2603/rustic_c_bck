@@ -1,0 +1,66 @@
+=== Food Image Matching & SQL Database Update ===
+Dry Run status: DISABLED (DB writes will occur)
+✅ Database successfully backed up to:
+   C:\Users\Mujiaba Hassan\OneDrive\Pictures\PROJECT IMAGES\rustic-charm\backend\database\rustic-charm.sqlite.bak.2026-08-15T13-57-01-242Z
+
+1. Total images found inside backend/images/foodimg/food image: 146
+2. Total SQLite menu items inspected: 595
+Unique image keys resolved: 115
+3. Number of confident matches found: 51
+4. Number of menu item image fields to update: 51
+5. Number of images skipped because no confident menu item match existed: 83
+6. Number of menu items left completely unchanged because no matching image was found: 544
+
+7. Sample of successful matches (at least 20 sample successful matches):
+   [1] File: "iced latte.png" → Menu: "Iced Latte" → Stored: "/images/foodimg/food image/iced latte.png"
+   [2] File: "tea pot.png" → Menu: "Tea Pot" → Stored: "/images/foodimg/food image/tea pot.png"
+   [3] File: "orange juice.png" → Menu: "Orange Juice" → Stored: "/images/foodimg/food image/orange juice.png"
+   [4] File: "pineapple juice.png" → Menu: "Pineapple Juice" → Stored: "/images/foodimg/food image/pineapple juice.png"
+   [5] File: "watermelon juice.jpg" → Menu: "Watermelon Juice" → Stored: "/images/foodimg/food image/watermelon juice.jpg"
+   [6] File: "mango juice.jpg" → Menu: "Mango Juice" → Stored: "/images/foodimg/food image/mango juice.jpg"
+   [7] File: "lemon nana.png" → Menu: "Lemon Nana" → Stored: "/images/foodimg/food image/lemon nana.png"
+   [8] File: "mix veg pizza.png" → Menu: "Mix Vegetable Pizza" → Stored: "/images/foodimg/food image/mix veg pizza.png"
+   [9] File: "masala papad.png" → Menu: "Masala Papad" → Stored: "/images/foodimg/food image/masala papad.png"
+   [10] File: "butter garlic prawns.png" → Menu: "Butter Garlic Prawns" → Stored: "/images/foodimg/food image/butter garlic prawns.png"
+   [11] File: "butter garkic squid.png" → Menu: "Butter Garlic Squid" → Stored: "/images/foodimg/food image/butter garkic squid.png"
+   [12] File: "chicken 65.png" → Menu: "Chicken 65" → Stored: "/images/foodimg/food image/chicken 65.png"
+   [13] File: "chicken lolypop.png" → Menu: "Chicken Lollipop" → Stored: "/images/foodimg/food image/chicken lolypop.png"
+   [14] File: "fish and chips.png" → Menu: "Fish & Chips" → Stored: "/images/foodimg/food image/fish and chips.png"
+   [15] File: "prawns finger.png" → Menu: "Prawns Fingers" → Stored: "/images/foodimg/food image/prawns finger.png"
+   [16] File: "veg clear soup.png" → Menu: "Clear Soup - Vegetable" → Stored: "/images/foodimg/food image/veg clear soup.png"
+   [17] File: "mix veg salad.png" → Menu: "Mix Vegetable Salad" → Stored: "/images/foodimg/food image/mix veg salad.png"
+   [18] File: "prawns salad.png" → Menu: "Prawns Salad" → Stored: "/images/foodimg/food image/prawns salad.png"
+   [19] File: "thousand island salad.png" → Menu: "Thousand Island Salad" → Stored: "/images/foodimg/food image/thousand island salad.png"
+   [20] File: "tuna salad.png" → Menu: "Tuna Salad" → Stored: "/images/foodimg/food image/tuna salad.png"
+   [21] File: "seafood salad.png" → Menu: "Seafood Salad" → Stored: "/images/foodimg/food image/seafood salad.png"
+   [22] File: "chicken handi.jpg" → Menu: "Chicken Handi" → Stored: "/images/foodimg/food image/chicken handi.jpg"
+   [23] File: "butter chicken.png" → Menu: "Butter Chicken" → Stored: "/images/foodimg/food image/butter chicken.png"
+   [24] File: "dall tadka.png" → Menu: "Dal Tadka" → Stored: "/images/foodimg/food image/dall tadka.png"
+   [25] File: "miv vegetable.png" → Menu: "Mix Vegetable" → Stored: "/images/foodimg/food image/miv vegetable.png"
+   [26] File: "palak paneer.png" → Menu: "Palak Paneer" → Stored: "/images/foodimg/food image/palak paneer.png"
+   [27] File: "paneer butter masala.jpg" → Menu: "Paneer Butter Masala" → Stored: "/images/foodimg/food image/paneer butter masala.jpg"
+   [28] File: "chicken tikka.png" → Menu: "Chicken Tikka" → Stored: "/images/foodimg/food image/chicken tikka.png"
+   [29] File: "paneer tikka.png" → Menu: "Paneer Tikka" → Stored: "/images/foodimg/food image/paneer tikka.png"
+   [30] File: "prawns tikka.png" → Menu: "Prawns Tikka" → Stored: "/images/foodimg/food image/prawns tikka.png"
+   [31] File: "beef steak.png" → Menu: "Beef Steak" → Stored: "/images/foodimg/food image/beef steak.png"
+   [32] File: "chicken steak.png" → Menu: "Chicken Steak" → Stored: "/images/foodimg/food image/chicken steak.png"
+   [33] File: "shakshuka.png" → Menu: "Shakshuka" → Stored: "/images/foodimg/food image/shakshuka.png"
+   [34] File: "falafel platter.png" → Menu: "Falafel Platter" → Stored: "/images/foodimg/food image/falafel platter.png"
+   [35] File: "red snapper.png" → Menu: "Red Snapper" → Stored: "/images/foodimg/food image/red snapper.png"
+   [36] File: "veg fried rice.jpg" → Menu: "Vegetable Fried Rice" → Stored: "/images/foodimg/food image/veg fried rice.jpg"
+   [37] File: "egg fried rice.jpg" → Menu: "Egg Fried Rice" → Stored: "/images/foodimg/food image/egg fried rice.jpg"
+   [38] File: "chicken fried rice.jpg" → Menu: "Chicken Fried Rice" → Stored: "/images/foodimg/food image/chicken fried rice.jpg"
+   [39] File: "prawns fried rice.jpg" → Menu: "Prawns Fried Rice" → Stored: "/images/foodimg/food image/prawns fried rice.jpg"
+   [40] File: "veg hakka noodles.jpg" → Menu: "Veg Hakka Noodles" → Stored: "/images/foodimg/food image/veg hakka noodles.jpg"
+   [41] File: "chicken hakka noodles.jpg" → Menu: "Chicken Hakka Noodles" → Stored: "/images/foodimg/food image/chicken hakka noodles.jpg"
+   [42] File: "tom yum soup prawns.jpg" → Menu: "Tom Yum Soup - Prawn" → Stored: "/images/foodimg/food image/tom yum soup prawns.jpg"
+   [43] File: "chicken momo.png" → Menu: "Momo - Chicken" → Stored: "/images/foodimg/food image/chicken momo.png"
+   [44] File: "onion rings .png" → Menu: "Onion Rings" → Stored: "/images/foodimg/food image/onion rings .png"
+   [45] File: "fruit custurd.png" → Menu: "Fruit Custard" → Stored: "/images/foodimg/food image/fruit custurd.png"
+
+8. Ambiguous matches that were intentionally skipped:
+   (None)
+
+9. Confirm that unmatched menu items were NOT modified: OK (unchanged count: 544)
+10. Confirm that no existing menu item was assigned an image unless there was a confident match: OK
+11. Confirm the SQLite database backup was created before updates: YES, created backup before starting updates

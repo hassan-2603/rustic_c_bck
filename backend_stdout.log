@@ -1,0 +1,3 @@
+◇ injected env (3) from .env // tip: ⌘ override existing { override: true }
+🗄️ SQLite database initialized for the backend data layer
+🚀 Rustic Charm Backend Server running on http://localhost:5000

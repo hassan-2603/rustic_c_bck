@@ -1,0 +1,458 @@
+{
+  "dbPath": "C:\\Users\\Mujiaba Hassan\\OneDrive\\Pictures\\PROJECT IMAGES\\rustic-charm\\backend\\database\\rustic-charm.sqlite",
+  "categories": 37,
+  "menu_items": 554,
+  "tables": 12,
+  "sampleCategories": [
+    {
+      "id": "cat-starters",
+      "name": "Starters"
+    },
+    {
+      "id": "cat-mains",
+      "name": "Mains"
+    },
+    {
+      "id": "cat-desserts",
+      "name": "Desserts"
+    },
+    {
+      "id": "cat-drinks",
+      "name": "Drinks"
+    },
+    {
+      "id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "name": "Coffee / Barista"
+    },
+    {
+      "id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "name": "Hot Beverages"
+    },
+    {
+      "id": "bfabf5c0-ef60-477d-bda8-b1cf8e671733",
+      "name": "Fresh Juices"
+    },
+    {
+      "id": "456c2047-11af-4fc8-be19-92ed0f4ba12b",
+      "name": "Shakes, Lassi & Smoothies"
+    },
+    {
+      "id": "dce61e26-1a67-4628-b132-6aaf29484e89",
+      "name": "Pizza"
+    },
+    {
+      "id": "190170a0-13c8-4199-8439-51d52644e920",
+      "name": "Appetizers / Starters"
+    },
+    {
+      "id": "718c9b75-81a6-4fa8-a5b4-a6aa371ff60a",
+      "name": "Soups"
+    },
+    {
+      "id": "6c2a358a-640d-4583-a37f-8c11d696e54f",
+      "name": "Salads"
+    },
+    {
+      "id": "406f82bb-b54a-4189-bf07-12e1905e771a",
+      "name": "Rice & Bowls"
+    },
+    {
+      "id": "edbabda3-70ba-4cc7-ae77-564138fc8b22",
+      "name": "Indian Main Course"
+    },
+    {
+      "id": "9e65a8d3-cc24-4386-a7dc-183e610d9c18",
+      "name": "Tandoor"
+    },
+    {
+      "id": "d1e26c31-0a52-4942-9617-0b0320613f98",
+      "name": "Biryani"
+    },
+    {
+      "id": "e1590c83-d5b3-4a41-9d83-42c36070b646",
+      "name": "Thali"
+    },
+    {
+      "id": "278a6986-5c62-4856-a704-bf50fec80521",
+      "name": "Continental"
+    },
+    {
+      "id": "5f1d6a07-5789-4863-a582-5a92c15bfae3",
+      "name": "Israeli"
+    },
+    {
+      "id": "ddd104a7-258c-464a-9c60-e8942b88b2fc",
+      "name": "Whole Fish & Seafood"
+    },
+    {
+      "id": "9ad60768-a02a-4939-9107-d97e8674273f",
+      "name": "Asian Favorites"
+    },
+    {
+      "id": "54f53ae6-ca06-46f4-8d2a-9a5733c03d0d",
+      "name": "Fries & Sides"
+    },
+    {
+      "id": "5bb438c7-c32c-47ce-938d-18df929e7fc6",
+      "name": "Something Sweet"
+    },
+    {
+      "id": "67be2c16-3ae7-4206-bcca-21aac4329624",
+      "name": "Cold Beverages"
+    },
+    {
+      "id": "43392dc5-3ee2-4e73-b06e-2ec27404f00b",
+      "name": "Soft Drinks & Water"
+    },
+    {
+      "id": "9fde8892-ea0a-4934-8abb-2822297c657f",
+      "name": "Mocktails"
+    },
+    {
+      "id": "903f4a46-6c76-4709-9110-fc181ff093d8",
+      "name": "Eggs to Order"
+    },
+    {
+      "id": "936fc44d-edab-4073-bc3e-b7472d529715",
+      "name": "Combo Breakfast"
+    },
+    {
+      "id": "07bc7dbf-7d27-4a58-851f-b2b406a26a98",
+      "name": "Pancakes & Waffles"
+    },
+    {
+      "id": "4fb3b2a6-3031-43a2-8875-561532e96ff4",
+      "name": "Toasts & French Toast"
+    },
+    {
+      "id": "07aca79f-2fd2-41ef-b5a9-71a63746ec89",
+      "name": "Cereals & Healthy Bowls"
+    },
+    {
+      "id": "4bb3e78b-0e07-423e-b896-572d380ebd0e",
+      "name": "Sandwiches"
+    },
+    {
+      "id": "a44eda64-c71f-449e-a867-489cfd2aa583",
+      "name": "Burgers"
+    },
+    {
+      "id": "36990293-1ffc-481f-b5b3-566dc4eda27a",
+      "name": "Wraps & Rolls"
+    },
+    {
+      "id": "4b028e2a-c1d1-47d9-a7f4-b3b43290c0ab",
+      "name": "Pasta"
+    },
+    {
+      "id": "07492108-cea5-41d3-b5e1-4a11a5ee945f",
+      "name": "Indian Specialties"
+    },
+    {
+      "id": "7f7e501a-0166-4632-a23b-5142945a3862",
+      "name": "Chef's Recommendation"
+    }
+  ],
+  "sampleMenu": [
+    {
+      "id": "566f8646-8226-490c-b4e3-c2aea05ac942",
+      "name": "Espresso",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 110
+    },
+    {
+      "id": "c20dac7e-bb99-4889-aebb-80e1d6cd4d4f",
+      "name": "Espresso Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 150
+    },
+    {
+      "id": "6da8a81e-1c1c-4784-9e31-24057f5108c8",
+      "name": "Cappuccino",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "7ef8f38b-68f6-4a2f-b615-239dda332431",
+      "name": "Cappuccino Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 190
+    },
+    {
+      "id": "d38748e3-decd-4729-9e31-314e2bf8edda",
+      "name": "Espresso Macchiato",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 130
+    },
+    {
+      "id": "fd423eda-8670-45f3-b66e-8a31b043cf06",
+      "name": "Espresso Macchiato Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 150
+    },
+    {
+      "id": "ec511867-46e1-48a5-afa8-6f5b8909b052",
+      "name": "Espresso Bombon",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 140
+    },
+    {
+      "id": "b05eee9c-4562-4365-a796-224fc0513ea3",
+      "name": "Espresso Bombon Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 170
+    },
+    {
+      "id": "8d07d4ae-2698-4c64-9d64-36f3d1d2ef57",
+      "name": "Espresso Affogato",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "d0bd1376-2d2f-417c-b8bb-55d21e14e361",
+      "name": "Espresso Affogato Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 200
+    },
+    {
+      "id": "6a33de9f-5080-476c-b601-9b46e147ec23",
+      "name": "Espresso Con Panna",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "98359c21-d457-4ebe-8bdc-7c0aa919e861",
+      "name": "Espresso Con Panna Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 180
+    },
+    {
+      "id": "cbfddc68-dff4-46c7-9cd0-19bc726eed35",
+      "name": "Espresso Cortado",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 180
+    },
+    {
+      "id": "a2ba8b4a-80b2-40d8-87ff-6d9bbcbeeaaf",
+      "name": "Americano",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 140
+    },
+    {
+      "id": "5b40159d-7896-410e-a43e-f38ebee30b4f",
+      "name": "Americano Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "4df43606-fcad-4a26-a50a-4810899fac9c",
+      "name": "Flat White",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 220
+    },
+    {
+      "id": "01d85131-c319-423a-a0fb-056db858a2f9",
+      "name": "Cafe Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 190
+    },
+    {
+      "id": "0fc2e9c1-6761-4d3c-b6f7-b4eab83f544f",
+      "name": "Latte Macchiato",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "1b3ab886-0821-44c2-9357-480711af8064",
+      "name": "Latte Macchiato Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 200
+    },
+    {
+      "id": "c7840470-93fb-4a4d-8d70-fa35ef86d236",
+      "name": "Matcha Latte (Regular/Iced)",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 220
+    },
+    {
+      "id": "743e246b-99ea-4477-9411-3436f2245adf",
+      "name": "Mochaccino",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 170
+    },
+    {
+      "id": "0745a382-936f-4a41-a11b-13e9b820eb5a",
+      "name": "Mochaccino Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 200
+    },
+    {
+      "id": "d4de6e3b-7fcb-4ffe-a474-95ed2456d5cb",
+      "name": "Caramel Macchiato",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 220
+    },
+    {
+      "id": "e11543a7-2ad8-4997-bdaa-7617e53d3861",
+      "name": "Vanilla Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "e145a9d5-21ac-4f9a-8488-8df894f693b2",
+      "name": "Hazelnut Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "caaeb748-8fe8-4062-8e32-d988b50d71fa",
+      "name": "Caramel Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "042e2485-b709-4ecd-9388-0e1068a87801",
+      "name": "Honey Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "018dc632-fa12-41ea-bd2e-3f0b51026b74",
+      "name": "Iced Spanish Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "67bc6aa5-0c3a-4da5-92bf-304ad9e43370",
+      "name": "Iced Americano",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 140
+    },
+    {
+      "id": "0ebe1eda-cb43-4c6f-b7ab-c4b65c1d5f25",
+      "name": "Iced Americano Double",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "673cacfb-e098-4f86-afaf-b8f801ace78b",
+      "name": "Iced Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 190
+    },
+    {
+      "id": "b064f994-37ad-41fc-a01b-9f26b807f396",
+      "name": "Iced Cappuccino",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 160
+    },
+    {
+      "id": "fa1d013f-4f65-4d7a-96eb-a29000ed4086",
+      "name": "Iced Mocha",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "e9634396-c6c8-4c8d-a975-99c053081963",
+      "name": "Mocha Madness",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 270
+    },
+    {
+      "id": "9e160c8c-f3a2-462e-a469-c6d912c2ba62",
+      "name": "Iced Caramel Macchiato",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 250
+    },
+    {
+      "id": "a8a41466-6bfa-4f33-b8c0-0103580a7be8",
+      "name": "Hazelnut Iced Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 280
+    },
+    {
+      "id": "6e8af225-1a8b-422a-a37f-5328763e1c8f",
+      "name": "Vanilla Iced Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 280
+    },
+    {
+      "id": "e2debf60-0b1f-466e-8cdb-4c51009cc58b",
+      "name": "Caramel Iced Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 280
+    },
+    {
+      "id": "b0fd5613-57b7-4650-beb1-7a887f5ee7be",
+      "name": "Honey Iced Flavoured Latte",
+      "category_id": "2a486c04-714b-490d-b0f5-736029a75c64",
+      "price": 280
+    },
+    {
+      "id": "b8fd14eb-e63b-4ae2-9f57-980664694aad",
+      "name": "Black Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 50
+    },
+    {
+      "id": "35324357-0403-474b-b307-06673b5b7c27",
+      "name": "Green Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 70
+    },
+    {
+      "id": "d1c5f151-cc25-4388-acbd-c604c6f6bdf5",
+      "name": "Lemon Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 60
+    },
+    {
+      "id": "6d02c183-9b15-4c2c-b106-f8ff91dfbd06",
+      "name": "Masala Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 80
+    },
+    {
+      "id": "fbbc3384-e798-43b8-89c5-6e3c7925564f",
+      "name": "Milk Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 60
+    },
+    {
+      "id": "511c06d9-0446-4b4c-bfe0-887a096433c2",
+      "name": "Mint Tea",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 60
+    },
+    {
+      "id": "5076df49-6b6d-44b4-99f6-6c380da11a4a",
+      "name": "Tea with Soya Milk",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 100
+    },
+    {
+      "id": "4272f25a-8807-4716-a626-b42ea3963f6d",
+      "name": "Black Coffee",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 70
+    },
+    {
+      "id": "952884f5-045f-4dde-8adb-b69414ea586b",
+      "name": "Milk Coffee",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 80
+    },
+    {
+      "id": "3f5c5ec5-cb5e-4841-b721-2fa0be7a3c21",
+      "name": "Hot Chocolate",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 150
+    },
+    {
+      "id": "50b76711-f667-42ec-b05d-24740207ce92",
+      "name": "Ginger Lemon Honey",
+      "category_id": "472df567-b9aa-4efe-8035-30048470c1f2",
+      "price": 80
+    }
+  ]
+}
