@@ -72,6 +72,16 @@ import {
 } from "../services/offerService.js";
 
 const router = express.Router();
+
+// Handle CORS preflight requests
+router.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,x-admin-token,adminToken');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
+
 router.use(adminAuthMiddleware);
 
 // ==========================================

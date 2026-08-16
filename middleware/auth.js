@@ -120,6 +120,11 @@ async function verifyFirebaseAdminToken(token) {
 }
 
 async function adminAuthMiddleware(req, res, next) {
+  // Allow CORS preflight requests to pass through without authentication
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+
   // Accept token from multiple places to be robust in dev/proxy setups
   const authHeader = req.headers.authorization;
   let token = null;

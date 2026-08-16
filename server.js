@@ -83,7 +83,13 @@ async function ensureOffersDbReady() {
   );
 }
 
-app.use(cors({ origin: corsOrigins, credentials: true }));
+app.use(cors({
+  origin: corsOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-token', 'adminToken'],
+  optionsSuccessStatus: 200
+}));
 app.use(express.json());
 
 app.locals.db = sqliteDb;

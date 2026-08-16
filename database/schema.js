@@ -98,7 +98,6 @@ CREATE TABLE IF NOT EXISTS orders (
   waiter_name TEXT,
   accepted_at TEXT,
   served_at TEXT,
-  completed_at TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE SET NULL,
@@ -108,160 +107,92 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE TABLE IF NOT EXISTS order_items (
   id TEXT PRIMARY KEY,
   order_id TEXT NOT NULL,
-  menu_item_id TEXT,
-  name TEXT NOT NULL,
+  menu_item_id TEXT NOT NULL,
   quantity INTEGER NOT NULL DEFAULT 1,
-  price REAL NOT NULL DEFAULT 0,
+  unit_price REAL NOT NULL DEFAULT 0,
   special_instructions TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (menu_item_id) REFERENCES menu_items(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS waiters (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
-  pin INTEGER,
-  active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0,1)),
-  online INTEGER NOT NULL DEFAULT 0 CHECK (online IN (0,1)),
+  phone TEXT,
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS waiter_calls (
   id TEXT PRIMARY KEY,
-  session_id TEXT,
+  order_id TEXT,
   table_id TEXT,
   table_reference TEXT,
-  order_id TEXT,
-  customer_name TEXT,
-  customer_phone TEXT,
-  status TEXT NOT NULL DEFAULT 'Pending',
+  session_id TEXT,
+  waiter_id TEXT,
+  reason TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE SET NULL,
+  resolved_at TEXT,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL,
   FOREIGN KEY (table_id) REFERENCES tables(id) ON DELETE SET NULL,
-  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS offers (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT,
-  code TEXT,
-  discount_tag TEXT,
-  is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE SET NULL,
+  FOREIGN KEY (waiter_id) REFERENCES waiters(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS kitchen_credentials (
   id TEXT PRIMARY KEY,
-  password TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS supported_languages (
-  code TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  enabled INTEGER NOT NULL DEFAULT 1 CHECK (enabled IN (0,1)),
+CREATE TABLE IF NOT EXISTS menu_versions (
+  id TEXT PRIMARY KEY,
+  version_number INTEGER NOT NULL,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE INDEX IF NOT EXISTS idx_menu_items_category_id ON menu_items(category_id);
-CREATE INDEX IF NOT EXISTS idx_menu_translations_menu_item_id ON menu_translations(menu_item_id);
-CREATE INDEX IF NOT EXISTS idx_menu_translations_language_code ON menu_translations(language_code);
-CREATE INDEX IF NOT EXISTS idx_orders_session_id ON orders(session_id);
-CREATE INDEX IF NOT EXISTS idx_orders_table_id ON orders(table_id);
-CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
-CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);
-CREATE INDEX IF NOT EXISTS idx_sessions_table_id ON sessions(table_id);
-CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status);
-CREATE INDEX IF NOT EXISTS idx_waiter_calls_table_id ON waiter_calls(table_id);
-CREATE INDEX IF NOT EXISTS idx_waiter_calls_status ON waiter_calls(status);
-CREATE INDEX IF NOT EXISTS idx_offers_is_active ON offers(is_active);
 `;
 
-export function initializeSchema(db) {
-  // support both callback-style and Promise-style `db.exec`
-  try {
-    const result = db.exec(schemaSql);
-    if (result && typeof result.then === "function") {
-      return result;
-    }
-  } catch (e) {
-    // fall through to callback-style
+export async function initializeSchema(db) {
+  if (!db || typeof db.exec !== "function") {
+    console.warn("[schema] Skipping schema initialization: no db connection");
+    return;
   }
 
-  return new Promise((resolve, reject) => {
-    db.exec(schemaSql, (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
+  try {
+    await db.exec(schemaSql);
+    console.log("✓ Database schema initialized");
+
+    // Ensure there's at least one menu version
+    const existing = await db.get("SELECT COUNT(*) as count FROM menu_versions");
+    if (existing.count === 0) {
+      const id = crypto.randomUUID?.() || `version-${Date.now()}`;
+      await db.run(
+        "INSERT INTO menu_versions (id, version_number) VALUES (?, ?)",
+        [id, 1]
+      );
+    }
+  } catch (err) {
+    console.error("[schema] Error initializing schema:", err);
+    throw err;
+  }
 }
 
-export function seedDefaultData(db) {
-  const defaultSeedSql = `
-      INSERT OR IGNORE INTO restaurant_settings (id, key, value, updated_at) VALUES
-        ('app', 'restaurant_name', 'Rustic Charm', CURRENT_TIMESTAMP),
-        ('app', 'menu_version', '1', CURRENT_TIMESTAMP);
-
-      INSERT OR IGNORE INTO kitchen_credentials (id, password, updated_at) VALUES
-        ('kitchen', '0000', CURRENT_TIMESTAMP);
-
-      INSERT OR IGNORE INTO supported_languages (code, name, enabled, created_at) VALUES
-        ('en', 'English', 1, CURRENT_TIMESTAMP),
-        ('ru', 'Russian', 1, CURRENT_TIMESTAMP),
-        ('de', 'German', 1, CURRENT_TIMESTAMP),
-        ('es', 'Spanish', 1, CURRENT_TIMESTAMP),
-        ('kk', 'Kazakh', 1, CURRENT_TIMESTAMP),
-        ('he', 'Hebrew', 1, CURRENT_TIMESTAMP),
-        ('ja', 'Japanese', 1, CURRENT_TIMESTAMP),
-        ('ko', 'Korean', 1, CURRENT_TIMESTAMP);
-
-      INSERT OR IGNORE INTO categories (id, name, is_active, display_order, created_at, updated_at) VALUES
-        ('cat-starters', 'Starters', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('cat-mains', 'Mains', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('cat-desserts', 'Desserts', 1, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('cat-drinks', 'Drinks', 1, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-      INSERT OR IGNORE INTO tables (id, table_key, table_number, area, area_label, display_name, occupied, status, current_order_id, current_session_id, created_at, updated_at) VALUES
-        ('deck-area-1', 'deck-area-1', 1, 'deck-area', 'Deck Area', 'Deck Area - Table 1', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('deck-area-2', 'deck-area-2', 2, 'deck-area', 'Deck Area', 'Deck Area - Table 2', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('deck-area-3', 'deck-area-3', 3, 'deck-area', 'Deck Area', 'Deck Area - Table 3', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('dine-in-area-1', 'dine-in-area-1', 1, 'dine-in-area', 'Dine in area', 'Dine in area - Table 1', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('dine-in-area-2', 'dine-in-area-2', 2, 'dine-in-area', 'Dine in area', 'Dine in area - Table 2', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('dine-in-area-3', 'dine-in-area-3', 3, 'dine-in-area', 'Dine in area', 'Dine in area - Table 3', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('courtyard-area-1', 'courtyard-area-1', 1, 'courtyard-area', 'Courtyard area', 'Courtyard area - Table 1', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('courtyard-area-2', 'courtyard-area-2', 2, 'courtyard-area', 'Courtyard area', 'Courtyard area - Table 2', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('courtyard-area-3', 'courtyard-area-3', 3, 'courtyard-area', 'Courtyard area', 'Courtyard area - Table 3', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('chillout-area-1', 'chillout-area-1', 1, 'chillout-area', 'Chillout area', 'Chillout area - Table 1', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('chillout-area-2', 'chillout-area-2', 2, 'chillout-area', 'Chillout area', 'Chillout area - Table 2', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-        ('chillout-area-3', 'chillout-area-3', 3, 'chillout-area', 'Chillout area', 'Chillout area - Table 3', 0, 'available', '', '', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-    `;
-
-  // support both callback-style and Promise-style `db.exec`
-  try {
-    const result = db.exec(defaultSeedSql);
-    if (result && typeof result.then === "function") {
-      return result;
-    }
-  } catch (e) {
-    // fall through to callback-style
+export async function seedDefaultData(db) {
+  if (!db || typeof db.all !== "function") {
+    console.warn("[schema] Skipping seed: no db connection");
+    return;
   }
 
-  return new Promise((resolve, reject) => {
-    db.exec(defaultSeedSql, (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
+  try {
+    const categories = await db.all("SELECT COUNT(*) as count FROM categories");
+    if (categories[0]?.count === 0) {
+      console.log("[schema] Database is empty, skipping seed (data should be uploaded separately)");
+    }
+  } catch (err) {
+    console.warn("[schema] Could not check seed status:", err);
+  }
 }
-
-export { schemaSql };
