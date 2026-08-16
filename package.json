@@ -10,6 +10,9 @@
     "fb:serve": "cd functions && npm run serve",
     "fb:deploy": "cd functions && npm run deploy"
   },
+  "engines": {
+  "node": "22.x"
+},
   "dependencies": {
     "@google/genai": "^2.13.0",
     "cors": "^2.8.5",
