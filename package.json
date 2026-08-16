@@ -22,7 +22,7 @@
     "multer": "^2.2.0",
     "pdf-parse": "^2.4.5",
     "pdfreader": "^1.2.11",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
