@@ -11,8 +11,8 @@
     "fb:deploy": "cd functions && npm run deploy"
   },
   "engines": {
-  "node": "22.x"
-},
+    "node": "22.x"
+  },
   "dependencies": {
     "@google/genai": "^2.13.0",
     "cors": "^2.8.5",
@@ -22,7 +22,8 @@
     "multer": "^2.2.0",
     "pdf-parse": "^2.4.5",
     "pdfreader": "^1.2.11",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
