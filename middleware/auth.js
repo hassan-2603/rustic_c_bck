@@ -29,6 +29,19 @@ async function ensureFirebaseAdmin() {
   const admin = await loadFirebaseAdmin();
   if (!admin) return null;
 
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    try {
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+      firebaseAdminApp = admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      return firebaseAdminApp;
+    } catch (err) {
+      console.warn("Failed to initialize firebase-admin from FIREBASE_SERVICE_ACCOUNT_JSON:", err.message);
+      return null;
+    }
+  }
+
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     try {
       if (typeof admin.initializeApp === "function") {
