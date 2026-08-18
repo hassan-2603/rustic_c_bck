@@ -2,7 +2,7 @@ import http from "node:http";
 import net from "node:net";
 import { spawn } from "node:child_process";
 
-const HOST = "127.0.0.1";
+const HOST = "0.0.0.0";
 const PORT = Number(process.env.PORT || 17890);
 
 function sendJson(res, status, body) {
