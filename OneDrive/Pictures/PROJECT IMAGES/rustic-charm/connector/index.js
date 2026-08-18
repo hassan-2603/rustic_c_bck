@@ -42,8 +42,25 @@ function centeredLine(value, width = 42) {
   return `${" ".repeat(left)}${text}`;
 }
 
+function wrapText(text, width) {
+  const words = String(text).split(" ");
+  const result = [];
+  let line = "";
+  for (const word of words) {
+    if ((line + word).length <= width) {
+      line += (line ? " " : "") + word;
+    } else {
+      if (line) result.push(line);
+      line = word;
+    }
+  }
+  if (line) result.push(line);
+  return result;
+}
+
 function buildReceipt({ bill, kot, printType, autoCut, test }) {
   const lines = [];
+  lines.push("");
   lines.push("");
   lines.push(centeredLine("RUSTIC CHARM"));
   lines.push(centeredLine("RESTRO BAR AND CAFE BY DAAOM"));
@@ -59,8 +76,20 @@ function buildReceipt({ bill, kot, printType, autoCut, test }) {
     lines.push(`Captain: ${escPosText(kot?.captainName || "--")}`);
     lines.push("------------------------------------------");
     for (const item of kot?.items || []) {
-      const category = item.category ? ` (${item.category})` : "";
-      lines.push(`${escPosText(item.quantity)}  ${escPosText(item.name)}${escPosText(category)}`);
+      const quantity = escPosText(String(item.quantity || ""));
+      const itemName = escPosText(item.name || "");
+      const itemCategory = item.category ? `(${escPosText(item.category)})` : "";
+      const nameAndCategory = itemCategory ? `${itemName} ${itemCategory}` : itemName;
+      const maxWidth = 38;
+      const wrapped = wrapText(nameAndCategory, maxWidth);
+      for (let i = 0; i < wrapped.length; i++) {
+        if (i === 0) {
+          lines.push(`${quantity}  ${wrapped[i]}`);
+        } else {
+          lines.push(`    ${wrapped[i]}`);
+        }
+      }
+      lines.push("");
     }
   } else {
     lines.push(`Bill No: ${escPosText(bill.orderNumber)}`);
@@ -89,6 +118,8 @@ function buildReceipt({ bill, kot, printType, autoCut, test }) {
     lines.push("");
     lines.push(centeredLine("Thank You, Visit Again"));
   }
+  lines.push("");
+  lines.push("");
   lines.push("");
   lines.push("");
 
