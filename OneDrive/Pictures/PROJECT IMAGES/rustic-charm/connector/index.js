@@ -37,7 +37,14 @@ function escPosText(value) {
 }
 
 function wrapText(text, width) {
-  const words = String(text).split(" ");
+  const words = String(text).split(/\s+/).flatMap((word) => {
+    if (word.length <= width) return [word];
+    const chunks = [];
+    for (let index = 0; index < word.length; index += width) {
+      chunks.push(word.slice(index, index + width));
+    }
+    return chunks;
+  });
   const result = [];
   let line = "";
   for (const word of words) {
@@ -124,11 +131,14 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
     for (const item of bill.items || []) {
-      const name = escPosText(item.name).slice(0, 24).padEnd(24);
-      const quantity = String(item.quantity).padStart(3);
-      const rate = String(item.price).padStart(6);
-      const amount = String(item.amount).padStart(7);
-      buffers.push(Buffer.from(`${name} ${quantity} ${rate} ${amount}\n`, "utf8"));
+      const quantity = escPosText(String(item.quantity || ""));
+      const detail = `${escPosText(item.name || "")}  Rs ${escPosText(item.price)}  Rs ${escPosText(item.amount)}`;
+      const wrapped = wrapText(detail, 38);
+      for (let index = 0; index < wrapped.length; index++) {
+        buffers.push(Buffer.from(index === 0
+          ? `${quantity}  ${wrapped[index]}\n`
+          : `    ${wrapped[index]}\n`, "utf8"));
+      }
       buffers.push(Buffer.from("\n", "utf8"));
     }
     
@@ -142,7 +152,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from(`TOTAL: Rs ${bill.finalTotal ?? bill.total}\n`, "utf8"));
     buffers.push(Buffer.from("\n", "utf8"));
     buffers.push(Buffer.from("TIN NO: 30410500872\n", "utf8"));
-    buffers.push(Buffer.from("GSTIN: 30BJUNPM9167Q1ZQ\n", "utf8"));
+    buffers.push(Buffer.from("GSTIN: 30BUJNPMS167Q1ZQ\n", "utf8"));
     buffers.push(Buffer.from("\n", "utf8"));
     
     // Center for thank you
