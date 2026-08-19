@@ -81,7 +81,6 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
   // Restaurant header (centered)
   buffers.push(Buffer.from("RUSTIC CHARM\n", "utf8"));
   buffers.push(Buffer.from("RESTRO BAR AND CAFE BY DAAOM\n", "utf8"));
-  buffers.push(Buffer.from("RUSTIC CHARM\n", "utf8"));
   buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
   
   if (test) {
@@ -121,6 +120,12 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
     buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
+    if (bill.customerName) {
+      buffers.push(Buffer.from(`Customer: ${escPosText(bill.customerName)}\n`, "utf8"));
+    }
+    if (bill.customerPhone) {
+      buffers.push(Buffer.from(`Phone: ${escPosText(bill.customerPhone)}\n`, "utf8"));
+    }
     buffers.push(Buffer.from(`Waiter: ${escPosText(bill.waiterName || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
