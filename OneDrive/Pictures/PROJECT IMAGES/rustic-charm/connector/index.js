@@ -116,7 +116,18 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
       buffers.push(Buffer.from("\n", "utf8"));
     }
   } else {
-    // Bill (centered header)
+    // Bill uses the same print state as KOT before its own content.
+    buffers.push(Buffer.from([0x1b, 0x21, 0x00])); // Normal print mode
+    buffers.push(Buffer.from([0x1b, 0x45, 0x00])); // Normal weight
+    buffers.push(Buffer.from([0x1b, 0x2d, 0x00])); // No underline
+    buffers.push(Buffer.from([0x1d, 0x42, 0x00])); // No reverse print
+    buffers.push(Buffer.from([0x1d, 0x21, 0x00])); // Normal size
+    buffers.push(Buffer.from([0x1b, 0x4d, 0x00])); // Font A
+    buffers.push(Buffer.from([0x1b, 0x32])); // Default line spacing
+    buffers.push(Buffer.from([0x1d, 0x4c, 0x10, 0x00])); // Same left margin
+    buffers.push(Buffer.from([0x1d, 0x57, 0x20, 0x02])); // Same print width
+
+    // Bill centered header and order details.
     buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
     buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
@@ -130,7 +141,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
-    // Switch to left for bill items
+    // Bill items use the same left alignment and wrapping width as KOT.
     buffers.push(Buffer.from([0x1b, 0x61, 0x00])); // Left alignment
     buffers.push(Buffer.from("Particulars                 Qty Rate    Amt\n", "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
