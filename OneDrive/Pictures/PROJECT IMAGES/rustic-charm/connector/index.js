@@ -78,7 +78,6 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from(`KOT No: ${escPosText(kot?.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(kot?.tableNumber || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(kot?.date)}\n`, "utf8"));
-    buffers.push(Buffer.from(`Captain: ${escPosText(kot?.captainName || "--")}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
     // Switch to left alignment for items
@@ -106,7 +105,6 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     // Bill (centered header)
     buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
-    buffers.push(Buffer.from(`Captain: ${escPosText(bill.captainName || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
