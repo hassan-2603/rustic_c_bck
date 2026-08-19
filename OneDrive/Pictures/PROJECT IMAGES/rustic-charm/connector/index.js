@@ -80,6 +80,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from("KITCHEN ORDER TICKET\n", "utf8"));
     buffers.push(Buffer.from(`KOT No: ${escPosText(kot?.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(kot?.tableNumber || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from(`Waiter: ${escPosText(kot?.waiterName || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(kot?.date)}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
@@ -109,6 +110,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
     buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from(`Waiter: ${escPosText(bill.waiterName || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
     
