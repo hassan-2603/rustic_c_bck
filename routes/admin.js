@@ -54,6 +54,7 @@ import {
   deleteAllOrders,
   deleteAllCompletedOrders,
   updateOrder,
+  createAdminOrder,
   getWaiters,
   getWaiterCalls,
   addWaiter,
@@ -257,6 +258,15 @@ router.get("/orders", async (req, res, next) => {
     res.json(buildApiResponse(orders));
   } catch (err) {
     next(buildApiError(err.message, 500));
+  }
+});
+
+router.post("/orders", async (req, res, next) => {
+  try {
+    const order = await createAdminOrder(req.app.locals.db, req.body || {});
+    res.status(201).json(buildApiResponse(order));
+  } catch (err) {
+    next(buildApiError(err.message, err.status || 500));
   }
 });
 

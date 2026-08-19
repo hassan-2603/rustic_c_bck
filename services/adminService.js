@@ -540,7 +540,15 @@ export async function getOrders(db) {
     const rows = await db.all("SELECT * FROM orders ORDER BY created_at DESC");
     const orders = [];
     for (const row of rows) {
-      const items = await db.all("SELECT * FROM order_items WHERE order_id = ? ORDER BY created_at ASC", [row.id]);
+      const items = await db.all(
+        `SELECT order_items.*, categories.name AS category_name
+         FROM order_items
+         LEFT JOIN menu_items ON order_items.menu_item_id = menu_items.id
+         LEFT JOIN categories ON menu_items.category_id = categories.id
+         WHERE order_items.order_id = ?
+         ORDER BY order_items.created_at ASC`,
+        [row.id]
+      );
       orders.push({
         id: row.id,
         sessionId: row.session_id,
@@ -551,6 +559,7 @@ export async function getOrders(db) {
         tableLabel: row.table_label,
         orderNumber: row.order_number,
         status: row.status,
+        orderSource: row.order_source,
         total: Number(row.total || 0),
         customerName: row.customer_name,
         customerPhone: row.customer_phone,
@@ -571,6 +580,7 @@ export async function getOrders(db) {
           id: item.id,
           menuItemId: item.menu_item_id,
           name: item.name,
+          category: item.category_name || "",
           quantity: Number(item.quantity || 0),
           price: Number(item.price || 0),
           specialInstructions: item.special_instructions || "",
@@ -579,8 +589,34 @@ export async function getOrders(db) {
     }
     return orders;
   }
+
   const snapshot = await ordersCollection(db).orderBy("createdAt", "desc").get();
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function createAdminOrder(db, order) {
+  if (!order?.tableId || !order?.waiterId || !Array.isArray(order.items) || order.items.length === 0) {
+    throw new Error("Waiter, table, and at least one item are required");
+  }
+  if (!isSqliteDb(db)) throw new Error("SQLite-backed backend requires SQLite database access");
+  const table = await db.get("SELECT * FROM tables WHERE id = ?", [order.tableId]);
+  const waiter = await db.get("SELECT * FROM waiters WHERE id = ?", [order.waiterId]);
+  if (!table || !waiter || waiter.active === 0 || waiter.is_active === 0) throw new Error("Selected waiter or table was not found");
+  const id = crypto.randomUUID();
+  const orderNumber = await generateOrderNumber(db);
+  const now = new Date().toISOString();
+  await db.run(
+    "INSERT INTO orders (id, table_id, table_reference, table_number, table_area, table_label, order_number, order_source, status, total, waiter_id, waiter_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [id, table.id, table.table_key, table.table_number, table.area, table.display_name, orderNumber, "admin", "Accepted", Number(order.total) || 0, waiter.id, waiter.name, now, now]
+  );
+  for (const item of order.items) {
+    await db.run(
+      "INSERT INTO order_items (id, order_id, menu_item_id, name, quantity, price, special_instructions, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [crypto.randomUUID(), id, item.menuItemId || null, item.name || "", Math.max(1, Number(item.quantity) || 1), Number(item.price) || 0, "", now]
+    );
+  }
+  await db.run("UPDATE tables SET occupied = 1, status = 'occupied', current_order_id = ?, updated_at = ? WHERE id = ?", [id, now, table.id]);
+  return { id, orderNumber };
 }
 
 export async function deleteAllOrders(db) {

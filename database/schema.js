@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS orders (
   table_label TEXT,
   order_number TEXT NOT NULL UNIQUE,
   status TEXT NOT NULL DEFAULT 'Pending',
+  order_source TEXT,
   total REAL NOT NULL DEFAULT 0,
   customer_name TEXT,
   customer_phone TEXT,
@@ -164,6 +165,11 @@ export async function initializeSchema(db) {
 
   try {
     await db.exec(schemaSql);
+    try {
+      await db.run("ALTER TABLE orders ADD COLUMN order_source TEXT");
+    } catch (err) {
+      if (!String(err.message).includes("duplicate column name")) throw err;
+    }
     console.log("✓ Database schema initialized");
 
     // Ensure there's at least one menu version
