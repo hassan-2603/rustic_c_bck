@@ -57,6 +57,9 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
   
   // Initialize and set center alignment
   buffers.push(Buffer.from([0x1b, 0x40])); // Reset
+  buffers.push(Buffer.from([0x1b, 0x45, 0x00])); // Normal weight
+  buffers.push(Buffer.from([0x1d, 0x21, 0x00])); // Normal size
+  buffers.push(Buffer.from([0x1b, 0x4d, 0x00])); // Font A
   buffers.push(Buffer.from([0x1d, 0x4c, 0x10, 0x00])); // Set left margin
   buffers.push(Buffer.from([0x1d, 0x57, 0x20, 0x02])); // Set print width
   buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
@@ -103,6 +106,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     }
   } else {
     // Bill (centered header)
+    buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
     buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
     buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
     buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
