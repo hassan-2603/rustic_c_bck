@@ -125,6 +125,7 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
       const rate = String(item.price).padStart(6);
       const amount = String(item.amount).padStart(7);
       buffers.push(Buffer.from(`${name} ${quantity} ${rate} ${amount}\n`, "utf8"));
+      buffers.push(Buffer.from("\n", "utf8"));
     }
     
     buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
