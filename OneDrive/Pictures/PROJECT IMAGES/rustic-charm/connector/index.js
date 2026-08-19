@@ -117,6 +117,13 @@ function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
     }
   } else {
     // Bill uses the same print state as KOT before its own content.
+    buffers.push(Buffer.from([0x1b, 0x40])); // ESC @ reset
+    buffers.push(Buffer.from([0x1b, 0x4d, 0x00])); // Font A
+    buffers.push(Buffer.from([0x1d, 0x21, 0x00])); // GS ! 0 normal size
+    buffers.push(Buffer.from([0x1b, 0x45, 0x00])); // ESC E 0 normal weight
+    buffers.push(Buffer.from([0x1b, 0x32])); // ESC 2 default line spacing
+    buffers.push(Buffer.from([0x1d, 0x4c, 0x10, 0x00])); // Same left margin
+    buffers.push(Buffer.from([0x1d, 0x57, 0x20, 0x02])); // Same print width
     buffers.push(Buffer.from([0x1b, 0x21, 0x00])); // Normal print mode
     buffers.push(Buffer.from([0x1b, 0x45, 0x00])); // Normal weight
     buffers.push(Buffer.from([0x1b, 0x2d, 0x00])); // No underline
