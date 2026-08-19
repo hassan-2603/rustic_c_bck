@@ -36,12 +36,6 @@ function escPosText(value) {
   return String(value ?? "").replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
 }
 
-function centeredLine(value, width = 42) {
-  const text = escPosText(value).slice(0, width);
-  const left = Math.max(0, Math.floor((width - text.length) / 2));
-  return `${" ".repeat(left)}${text}`;
-}
-
 function wrapText(text, width) {
   const words = String(text).split(" ");
   const result = [];
@@ -58,23 +52,40 @@ function wrapText(text, width) {
   return result;
 }
 
-function buildReceipt({ bill, kot, printType, autoCut, test }) {
-  const lines = [];
-  lines.push("");
-  lines.push("");
-  lines.push(centeredLine("RUSTIC CHARM"));
-  lines.push(centeredLine("RESTRO BAR AND CAFE BY DAAOM"));
-  lines.push(centeredLine("RUSTIC CHARM"));
-  lines.push("------------------------------------------");
+function buildReceiptWithAlignment({ bill, kot, printType, autoCut, test }) {
+  const buffers = [];
+  
+  // Initialize and set center alignment
+  buffers.push(Buffer.from([0x1b, 0x40])); // Reset
+  buffers.push(Buffer.from([0x1d, 0x4c, 0x10, 0x00])); // Set left margin
+  buffers.push(Buffer.from([0x1d, 0x57, 0x20, 0x02])); // Set print width
+  buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
+  
+  // Top margin
+  buffers.push(Buffer.from("\n\n", "utf8"));
+  
+  // Restaurant header (centered)
+  buffers.push(Buffer.from("RUSTIC CHARM\n", "utf8"));
+  buffers.push(Buffer.from("RESTRO BAR AND CAFE BY DAAOM\n", "utf8"));
+  buffers.push(Buffer.from("RUSTIC CHARM\n", "utf8"));
+  buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
+  
   if (test) {
-    lines.push(centeredLine("Printer test successful"));
+    buffers.push(Buffer.from("Printer test successful\n", "utf8"));
   } else if (printType === "kot") {
-    lines.push(centeredLine("KITCHEN ORDER TICKET"));
-    lines.push(`KOT No: ${escPosText(kot?.orderNumber)}`);
-    lines.push(`Table: ${escPosText(kot?.tableNumber || "--")}`);
-    lines.push(`Date: ${escPosText(kot?.date)}`);
-    lines.push(`Captain: ${escPosText(kot?.captainName || "--")}`);
-    lines.push("------------------------------------------");
+    // KOT header (centered)
+    buffers.push(Buffer.from("KITCHEN ORDER TICKET\n", "utf8"));
+    buffers.push(Buffer.from(`KOT No: ${escPosText(kot?.orderNumber)}\n`, "utf8"));
+    buffers.push(Buffer.from(`Table: ${escPosText(kot?.tableNumber || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from(`Date: ${escPosText(kot?.date)}\n`, "utf8"));
+    buffers.push(Buffer.from(`Captain: ${escPosText(kot?.captainName || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
+    
+    // Switch to left alignment for items
+    buffers.push(Buffer.from([0x1b, 0x61, 0x00])); // Left alignment
+    buffers.push(Buffer.from("\n", "utf8"));
+    
+    // Food items (left-aligned)
     for (const item of kot?.items || []) {
       const quantity = escPosText(String(item.quantity || ""));
       const itemName = escPosText(item.name || "");
@@ -84,57 +95,66 @@ function buildReceipt({ bill, kot, printType, autoCut, test }) {
       const wrapped = wrapText(nameAndCategory, maxWidth);
       for (let i = 0; i < wrapped.length; i++) {
         if (i === 0) {
-          lines.push(`${quantity}  ${wrapped[i]}`);
+          buffers.push(Buffer.from(`${quantity}  ${wrapped[i]}\n`, "utf8"));
         } else {
-          lines.push(`    ${wrapped[i]}`);
+          buffers.push(Buffer.from(`    ${wrapped[i]}\n`, "utf8"));
         }
       }
-      lines.push("");
+      buffers.push(Buffer.from("\n", "utf8"));
     }
   } else {
-    lines.push(`Bill No: ${escPosText(bill.orderNumber)}`);
-    lines.push(`Table: ${escPosText(bill.tableNumber || "--")}`);
-    lines.push(`Captain: ${escPosText(bill.captainName || "--")}`);
-    lines.push(`Date: ${escPosText(bill.date)}`);
-    lines.push("------------------------------------------");
-    lines.push("Particulars                 Qty Rate    Amt");
-    lines.push("------------------------------------------");
+    // Bill (centered header)
+    buffers.push(Buffer.from(`Bill No: ${escPosText(bill.orderNumber)}\n`, "utf8"));
+    buffers.push(Buffer.from(`Table: ${escPosText(bill.tableNumber || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from(`Captain: ${escPosText(bill.captainName || "--")}\n`, "utf8"));
+    buffers.push(Buffer.from(`Date: ${escPosText(bill.date)}\n`, "utf8"));
+    buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
+    
+    // Switch to left for bill items
+    buffers.push(Buffer.from([0x1b, 0x61, 0x00])); // Left alignment
+    buffers.push(Buffer.from("Particulars                 Qty Rate    Amt\n", "utf8"));
+    buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
+    
     for (const item of bill.items || []) {
       const name = escPosText(item.name).slice(0, 24).padEnd(24);
       const quantity = String(item.quantity).padStart(3);
       const rate = String(item.price).padStart(6);
       const amount = String(item.amount).padStart(7);
-      lines.push(`${name} ${quantity} ${rate} ${amount}`);
+      buffers.push(Buffer.from(`${name} ${quantity} ${rate} ${amount}\n`, "utf8"));
     }
-    lines.push("------------------------------------------");
-    lines.push(`FOOD TOTAL: Rs ${bill.total}`);
+    
+    buffers.push(Buffer.from("------------------------------------------\n", "utf8"));
+    buffers.push(Buffer.from(`FOOD TOTAL: Rs ${bill.total}\n`, "utf8"));
+    
     if (bill.discountAmount > 0) {
-      lines.push(`DISCOUNT: -Rs ${bill.discountAmount}`);
+      buffers.push(Buffer.from(`DISCOUNT: -Rs ${bill.discountAmount}\n`, "utf8"));
     }
-    lines.push(`TOTAL: Rs ${bill.finalTotal ?? bill.total}`);
-    lines.push("");
-    lines.push("TIN NO: 30410500872");
-    lines.push("GSTIN: 30BJUNPM9167Q1ZQ");
-    lines.push("");
-    lines.push(centeredLine("Thank You, Visit Again"));
+    
+    buffers.push(Buffer.from(`TOTAL: Rs ${bill.finalTotal ?? bill.total}\n`, "utf8"));
+    buffers.push(Buffer.from("\n", "utf8"));
+    buffers.push(Buffer.from("TIN NO: 30410500872\n", "utf8"));
+    buffers.push(Buffer.from("GSTIN: 30BJUNPM9167Q1ZQ\n", "utf8"));
+    buffers.push(Buffer.from("\n", "utf8"));
+    
+    // Center for thank you
+    buffers.push(Buffer.from([0x1b, 0x61, 0x01])); // Center alignment
+    buffers.push(Buffer.from("Thank You, Visit Again\n", "utf8"));
   }
-  lines.push("");
-  lines.push("");
-  lines.push("");
-  lines.push("");
-
-  const text = Buffer.from(`${lines.map(escPosText).join("\n")}\n`, "utf8");
-  const header = Buffer.from([
-    0x1b, 0x40,
-    0x1b, 0x61, 0x01,
-    0x1d, 0x4c, 0x10, 0x00,
-    0x1d, 0x57, 0x20, 0x02,
-  ]);
+  
+  // Bottom margin
+  buffers.push(Buffer.from("\n\n\n\n", "utf8"));
+  
+  // Reset alignment and prepare footer
+  buffers.push(Buffer.from([0x1b, 0x61, 0x00])); // Left alignment (reset)
+  
+  // Footer (cut)
   const footer = Buffer.from([
     0x1b, 0x61, 0x00,
     ...(autoCut ? [0x1d, 0x56, 0x00] : []),
   ]);
-  return Buffer.concat([header, text, footer]);
+  buffers.push(footer);
+  
+  return Buffer.concat(buffers);
 }
 
 function printNetwork(settings, payload) {
@@ -207,7 +227,7 @@ try {
 
 async function printJob({ settings, bill, kot, printType, test = false }) {
   if (!settings || !settings.connectionType) throw new Error("Printer settings are required");
-  const payload = buildReceipt({ bill, kot, printType, autoCut: settings.autoCut, test });
+  const payload = buildReceiptWithAlignment({ bill, kot, printType, autoCut: settings.autoCut, test });
   if (settings.connectionType === "network") {
     if (!settings.ipAddress || !settings.port) throw new Error("Printer IP address and port are required");
     return printNetwork(settings, payload);
